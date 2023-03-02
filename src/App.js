@@ -1,23 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { Box, Button } from "@chakra-ui/react";
+
+function Numbers(props) {
+  const nums = Array.from(Array(10).keys()).map((number) => {
+    return (
+      <Button key={number} w="40px" h="40px" margin="4px">
+        {number}
+      </Button>
+    );
+  });
+  return (
+    <Box display="flex" flexWrap="wrap" w="15%">
+      {" "}
+      {nums}{" "}
+    </Box>
+  );
+}
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Box display="flex" justifyContent="center" alignItems="center" ml='420px' w='1000px' h="100vh">
+        <Numbers />
+      </Box>
     </div>
   );
 }
