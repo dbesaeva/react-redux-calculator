@@ -7,7 +7,7 @@ function Numbers(props) {
     return (
       <Button
         onClick={(e) => {
-          if (props.data != "0") props.onClick(props.data + e.target.innerHTML);
+          if (props.data !== "0") props.onClick(props.data + e.target.innerHTML);
           else props.onClick(e.target.innerHTML);
         }}
         key={number}
@@ -27,9 +27,28 @@ function Numbers(props) {
   );
 }
 
+function CountButton(props) {
+  const expressions = /\+|\-|\/|\*| /;
+  const lastNumber = props.data[props.data.length - 1];
+  function checkExpressionType() {
+    if (expressions.test(lastNumber)) return
+    props.onClick(props.data + props.expression);
+  }
+  return (
+    <Button onClick={ () => {checkExpressionType()} }>
+        {props.expression}
+    </Button>
+  );
+}
+
 function App() {
   const [counts, setCounts] = useState("0");
   const [result, setResult] = useState("");
+
+  function applyExpression(countedNumber) {
+    setCounts(countedNumber);
+    setResult(eval(counts));
+  }
   return (
     <div className="App">
       <Box
@@ -50,7 +69,6 @@ function App() {
           <Box display="flex" justifyContent="between" w="100%">
             <Text
               display="flex"
-              flexDirection="column"
               justifyContent="start"
               alignItems="center"
               bg="gray.50"
@@ -65,7 +83,32 @@ function App() {
               {result}
             </Text>
           </Box>
-          <Numbers data={counts} onClick={setCounts} />
+          <Box display="flex">
+            <Numbers data={counts} onClick={setCounts} />
+            <Box display='flex' flexDirection="column" >
+              <CountButton
+                data={counts}
+                expression={"+"}
+                onClick={applyExpression}
+              />
+              <CountButton
+                data={counts}
+                expression={"-"}
+                onClick={applyExpression}
+              />
+              <CountButton
+                data={counts}
+                expression={"*"}
+                onClick={applyExpression}
+              />
+              <CountButton
+                data={counts}
+                expression={"/"}
+                onClick={applyExpression}
+              />
+            </Box>
+            <Button bg='tomato' m='4px' onClick={() => {setResult(eval(counts))}}>=</Button>
+          </Box>
         </Box>
       </Box>
     </div>
