@@ -1,13 +1,43 @@
 import "./App.css";
-import { Box, Button, Text } from "@chakra-ui/react";
+import { Box, Button, Text, Input, Flex } from "@chakra-ui/react";
 import { useState } from "react";
+
+function InputCalc(props) {
+  const [result, setResult] = useState("");
+
+  function updateCounts(e) {
+    const expressions = /\+|\-|\/|\*|=|[A-z]| /;
+    const lastNumber = e.target.value[e.target.value.length - 1];
+    if (expressions.test(lastNumber)) return
+    else setResult(eval(e.target.value));
+  }
+  return (
+    <Flex
+      alignItems="center"
+      justifyContent="center"
+      border="2px"
+      borderRadius="8px"
+      borderColor="gray.50"
+    >
+      <Input
+        type="text"
+        border="transparent"
+        onInput={(e) => {
+          updateCounts(e);
+        }}
+      />
+      <Text textColor='tomato' px='8px'> {result} </Text>
+    </Flex>
+  );
+}
 
 function Numbers(props) {
   const nums = Array.from(Array(10).keys()).map((number) => {
     return (
       <Button
         onClick={(e) => {
-          if (props.data !== "0") props.onClick(props.data + e.target.innerHTML);
+          if (props.data !== "0")
+            props.onClick(props.data + e.target.innerHTML);
           else props.onClick(e.target.innerHTML);
         }}
         key={number}
@@ -31,12 +61,16 @@ function CountButton(props) {
   const expressions = /\+|\-|\/|\*| /;
   const lastNumber = props.data[props.data.length - 1];
   function checkExpressionType() {
-    if (expressions.test(lastNumber)) return
+    if (expressions.test(lastNumber)) return;
     props.onClick(props.data + props.expression);
   }
   return (
-    <Button onClick={ () => {checkExpressionType()} }>
-        {props.expression}
+    <Button
+      onClick={() => {
+        checkExpressionType();
+      }}
+    >
+      {props.expression}
     </Button>
   );
 }
@@ -51,14 +85,14 @@ function App() {
   }
   return (
     <div className="App">
-      <Box
+      <Flex
         display="flex"
         flexDirection="column"
         justifyContent="center"
         alignItems="center"
         h="100vh"
       >
-        <Box
+        <Flex
           display="flex"
           gap="5px"
           flexDirection="column"
@@ -66,7 +100,8 @@ function App() {
           alignItems="center"
           w="200px"
         >
-          <Box display="flex" justifyContent="between" w="100%">
+          <InputCalc />
+          <Flex display="flex" justifyContent="between" w="100%">
             <Text
               display="flex"
               justifyContent="start"
@@ -82,10 +117,10 @@ function App() {
             <Text textColor="tomato" w="fix-content" h="38px">
               {result}
             </Text>
-          </Box>
-          <Box display="flex">
+          </Flex>
+          <Flex display="flex">
             <Numbers data={counts} onClick={setCounts} />
-            <Box display='flex' flexDirection="column" >
+            <Flex display="flex" flexDirection="column">
               <CountButton
                 data={counts}
                 expression={"+"}
@@ -106,11 +141,19 @@ function App() {
                 expression={"/"}
                 onClick={applyExpression}
               />
-            </Box>
-            <Button bg='tomato' m='4px' onClick={() => {setResult(eval(counts))}}>=</Button>
-          </Box>
-        </Box>
-      </Box>
+            </Flex>
+            <Button
+              bg="tomato"
+              m="4px"
+              onClick={() => {
+                setResult(eval(counts));
+              }}
+            >
+              =
+            </Button>
+          </Flex>
+        </Flex>
+      </Flex>
     </div>
   );
 }
